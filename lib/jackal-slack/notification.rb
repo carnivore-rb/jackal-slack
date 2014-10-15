@@ -35,13 +35,10 @@ module Jackal
         end
       end
 
-      # payload:: Payload
       # Return slack_notifier object using team & token from data or config
       # depending on what's loaded in the environment
       def slack_notifier
-        team  = Carnivore::Config.get(:slack, :team)
-        token = Carnivore::Config.get(:slack, :token)
-        ::Slack::Notifier.new(team, token) if team && token
+        ::Slack::Notifier.new(config(:team), config(:token))
       end
 
     end
