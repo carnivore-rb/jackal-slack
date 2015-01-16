@@ -38,7 +38,7 @@ module Jackal
       # Return slack_notifier object using team & token from data or config
       # depending on what's loaded in the environment
       def slack_notifier
-        ::Slack::Notifier.new(Carnivore::Config.get(:slack, :webhook_url))
+        ::Slack::Notifier.new(config[:webhook_url])
       end
 
     end
