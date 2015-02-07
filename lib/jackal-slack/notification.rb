@@ -28,9 +28,11 @@ module Jackal
               text: msg,
               color: slack_msg[:color]
             }
-            notifier.ping("Test kitchen run result:", attachments: [a_ok_note])
+            notifier.ping(
+              slack_msg.fetch(:description, 'Result:'),
+              attachments: [a_ok_note]
+            )
           end
-
           job_completed(:slack_notification, payload, message)
         end
       end
