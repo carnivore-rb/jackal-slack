@@ -23,14 +23,15 @@ module Jackal
           payload[:data][:slack][:messages].each do |slack_msg|
             notifier = slack_notifier
             msg = slack_msg[:message].to_s
-            a_ok_note = {
+            msg_attachment = {
               fallback: msg,
               text: msg,
-              color: slack_msg[:color]
+              color: slack_msg[:color],
+              mrkdwn_in: slack_msg.fetch(:markdown, true) ? [:text, :fallback] : []
             }
             notifier.ping(
               slack_msg.fetch(:description, 'Result:'),
-              attachments: [a_ok_note]
+              attachments: [msg_attachment]
             )
           end
           job_completed(:slack_notification, payload, message)
