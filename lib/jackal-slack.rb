@@ -1,5 +1,4 @@
 require 'jackal'
-require 'jackal-slack/version'
 
 module Jackal
   module Slack
@@ -7,3 +6,5 @@ module Jackal
   end
 end
 
+require 'jackal-slack/formatter'
+require 'jackal-slack/version'
