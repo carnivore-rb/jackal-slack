@@ -8,3 +8,11 @@ end
 
 require 'jackal-slack/formatter'
 require 'jackal-slack/version'
+
+Jackal.service(
+  :slack,
+  :description => 'Send messages to Slack',
+  :configuration => {
+    :webhook_url => 'Webhook URL to send messages'
+  }
+)
