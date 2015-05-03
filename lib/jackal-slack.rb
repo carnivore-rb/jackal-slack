@@ -13,6 +13,8 @@ Jackal.service(
   :slack,
   :description => 'Send messages to Slack',
   :configuration => {
-    :webhook_url => 'Webhook URL to send messages'
+    :webhook_url => {
+      :description => 'Webhook URL to send messages'
+    }
   }
 )
