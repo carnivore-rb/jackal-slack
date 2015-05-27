@@ -21,7 +21,6 @@ module Jackal
       def execute(message)
         failure_wrap(message) do |payload|
           payload[:data][:slack][:messages].each do |slack_msg|
-            notifier = slack_notifier
             msg = slack_msg[:message].to_s
             msg_attachment = {
               fallback: msg,
@@ -29,19 +28,26 @@ module Jackal
               color: slack_msg[:color],
               mrkdwn_in: slack_msg.fetch(:markdown, true) ? [:text, :fallback] : []
             }
-            notifier.ping(
-              slack_msg.fetch(:description, 'Result:'),
-              attachments: [msg_attachment]
-            )
+
+            desc = slack_msg.fetch(:description, 'Result:')
+            post_to_slack(desc, [msg_attachment])
           end
           job_completed(:slack_notification, payload, message)
         end
       end
 
+      # Isolate this method so it can be stubbed out in tests
+      def post_to_slack(description, attachments)
+        slack_notifier.ping(description, attachments: attachments)
+      end
+
       # Return slack_notifier object using team & token from data or config
       # depending on what's loaded in the environment
       def slack_notifier
-        ::Slack::Notifier.new(config[:webhook_url])
+        url = config[:webhook_url]
+        channel  = config.fetch(:channel, '#general')
+        username = config.fetch(:username, 'notifier')
+        ::Slack::Notifier.new(url, :channel => channel, :username => username)
       end
 
     end
