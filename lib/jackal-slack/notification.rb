@@ -45,9 +45,7 @@ module Jackal
       # depending on what's loaded in the environment
       def slack_notifier
         url = config[:webhook_url]
-        channel  = config.fetch(:channel, '#general')
-        username = config.fetch(:username, 'notifier')
-        ::Slack::Notifier.new(url, :channel => channel, :username => username)
+        ::Slack::Notifier.new(url)
       end
 
     end

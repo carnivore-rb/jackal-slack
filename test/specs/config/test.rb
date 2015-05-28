@@ -6,8 +6,6 @@ Configuration.new do
     slack do
       config do
         webhook_url 'https://hooks.slack.com/services/bogus/endpoint'
-        channel '#foo'
-        username 'jackal-slack-test'
       end
 
       sources do
