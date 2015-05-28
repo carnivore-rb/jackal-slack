@@ -11,7 +11,7 @@ Requires configured webhook endpoint from Slack:
   "jackal": {
     "config": {
       "slack": {
-        "webhook": SLACK_WEBHOOK
+        "webhook_url": SLACK_WEBHOOK_URL
       }
     }
   }

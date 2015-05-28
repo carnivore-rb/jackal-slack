@@ -12,5 +12,8 @@ Gem::Specification.new do |s|
   s.require_path = 'lib'
   s.add_dependency 'jackal', '>= 0.3.3', '< 1.0'
   s.add_dependency 'slack-notifier', '~> 1.0'
+
+  s.add_development_dependency 'carnivore-actor'
+
   s.files = Dir['lib/**/*'] + %w(jackal-slack.gemspec README.md CHANGELOG.md CONTRIBUTING.md LICENSE)
 end
