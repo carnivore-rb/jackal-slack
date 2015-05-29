@@ -37,12 +37,13 @@ describe Jackal::Slack::Notification do
     end
 
     it 'fails to execute when expected payload data is missing' do
-      arr = [{ :slack => 'bogus' }, { :slack => { :messages => [] }}]
+      arr = [{ :slack => 'bogus' }, { :slack => { :messages => nil }}]
       arr.each do |h|
         result = transmit_and_wait(Jackal::Utils.new_payload(:test, h))
         executed?(result).must_equal false
       end
     end
+
   end
 
   describe 'execute' do
@@ -69,7 +70,7 @@ describe Jackal::Slack::Notification do
   def transmit_and_wait(payload, wait_time = 1)
     notification.transmit(payload)
     source_wait(wait_time) { !MessageStore.messages.empty? }
-    MessageStore.messages.first
+    MessageStore.messages.pop
   end
 
   def valid_payload
