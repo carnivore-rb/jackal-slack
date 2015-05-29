@@ -19,17 +19,10 @@ end
 
 describe Jackal::Slack::Notification do
 
-  before do
-    @runner = run_setup(:test)
-  end
+  before { @runner = run_setup(:test) }
+  after  { @runner.terminate if @runner && @runner.alive? }
 
-  after do
-    @runner.terminate if @runner && @runner.alive?
-  end
-
-  let(:notification) do
-    Carnivore::Supervisor.supervisor[:jackal_slack_input]
-  end
+  let(:notification) { Carnivore::Supervisor.supervisor[:jackal_slack_input] }
 
   describe 'valid?' do
     it 'executes with valid payload' do
@@ -71,15 +64,15 @@ describe Jackal::Slack::Notification do
     payload_result['data']['executed'] == true
   end
 
-  def valid_payload
-    h = { :slack => { :messages => [ { :message => 'testing' } ]}}
-    Jackal::Utils.new_payload(:test, h)
-  end
-
   def transmit_and_wait(payload, wait_time = 1)
     notification.transmit(payload)
     source_wait(wait_time) { !MessageStore.messages.empty? }
     MessageStore.messages.first
+  end
+
+  def valid_payload
+    h = { :slack => { :messages => [ { :message => 'testing' } ]}}
+    Jackal::Utils.new_payload(:test, h)
   end
 
 end
