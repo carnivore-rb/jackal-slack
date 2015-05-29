@@ -15,8 +15,7 @@ module Jackal
       def valid?(message)
         super do |payload|
           config[:webhook_url] &&
-            payload.get(:data, :slack) &&
-            !payload.fetch(:data, :slack, :messages, []).empty?
+            payload.get(:data, :slack, :messages)
         end
       end
 
@@ -34,6 +33,7 @@ module Jackal
             desc = slack_msg.fetch(:description, 'Result:')
             post_to_slack(payload, desc, [msg_attachment])
           end
+          payload[:data][:slack].delete(:messages)
           job_completed(:slack_notification, payload, message)
         end
       end

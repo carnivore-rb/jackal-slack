@@ -49,6 +49,8 @@ describe Jackal::Slack::Notification do
     it 'passes correct data/format to slack-notifier' do
       result = transmit_and_wait(valid_payload)
       result.wont_be_nil
+      result.get(:data, :slack, :messages).must_equal nil
+
       result['description'].must_equal 'Result:'
 
       attachment_expectations = { :text => 'testing',
