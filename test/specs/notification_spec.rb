@@ -13,9 +13,7 @@ describe Jackal::Slack::Notification do
 
   before do
     @runner = run_setup(:test)
-    # because minitest has no before(:all)? ¯\_(ツ)_/¯
-    # TODO, figure out why this crashes actor without memoization
-    (track_execution(Jackal::Slack::Notification); $setup_ran = true) unless $setup_ran
+    track_execution(Jackal::Slack::Notification)
   end
 
   after  { @runner.terminate if @runner && @runner.alive? }
