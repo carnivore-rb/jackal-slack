@@ -2,14 +2,6 @@ require 'jackal-slack'
 require 'pry'
 
 class Jackal::Slack::Notification
-  alias_method :og_execute, :execute
-
-  # way of keeping track of Callback execution for validity check
-  def execute(message)
-    message.args['message']['data']['executed'] = true
-    og_execute(message)
-  end
-
   # stub out actual call to slack-notifier
   def post_to_slack(payload, description, attachments)
     payload.set(:attachment, attachments.first)
@@ -19,7 +11,11 @@ end
 
 describe Jackal::Slack::Notification do
 
-  before { @runner = run_setup(:test) }
+  before do
+    @runner = run_setup(:test)
+    track_execution(Jackal::Slack::Notification)
+  end
+
   after  { @runner.terminate if @runner && @runner.alive? }
 
   let(:notification) { Carnivore::Supervisor.supervisor[:jackal_slack_input] }
@@ -27,20 +23,20 @@ describe Jackal::Slack::Notification do
   describe 'valid?' do
     it 'executes with valid payload' do
       result = transmit_and_wait(valid_payload)
-      executed?(result).must_equal true
+      callback_executed?(result).must_equal true
     end
 
     it 'fails to execute when webhook_url is missing from config' do
       Carnivore::Config.set(:jackal, :slack, :config, :webhook_url, nil)
       result = transmit_and_wait(valid_payload)
-      executed?(result).must_equal false
+      callback_executed?(result).must_equal false
     end
 
     it 'fails to execute when expected payload data is missing' do
       arr = [{ :slack => 'bogus' }, { :slack => { :messages => nil }}]
       arr.each do |h|
         result = transmit_and_wait(Jackal::Utils.new_payload(:test, h))
-        executed?(result).must_equal false
+        callback_executed?(result).must_equal false
       end
     end
 
