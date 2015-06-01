@@ -23,20 +23,20 @@ describe Jackal::Slack::Notification do
   describe 'valid?' do
     it 'executes with valid payload' do
       result = transmit_and_wait(valid_payload)
-      result.executed?.must_equal true
+      callback_executed?(result).must_equal true
     end
 
     it 'fails to execute when webhook_url is missing from config' do
       Carnivore::Config.set(:jackal, :slack, :config, :webhook_url, nil)
       result = transmit_and_wait(valid_payload)
-      result.executed?.must_equal false
+      callback_executed?(result).must_equal false
     end
 
     it 'fails to execute when expected payload data is missing' do
       arr = [{ :slack => 'bogus' }, { :slack => { :messages => nil }}]
       arr.each do |h|
         result = transmit_and_wait(Jackal::Utils.new_payload(:test, h))
-        result.executed?.must_equal false
+        callback_executed?(result).must_equal false
       end
     end
 
