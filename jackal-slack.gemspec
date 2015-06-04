@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
   s.summary = 'Jackal Slack'
   s.author = 'Heavywater'
   s.email = 'support@hw-ops.com'
-  s.homepage = 'http://github.com/heavywater/jackal-slack'
+  s.homepage = 'http://github.com/carnivore-rb/jackal-slack'
   s.description = 'Jackal Slack'
   s.license = 'Apache 2.0'
   s.require_path = 'lib'
