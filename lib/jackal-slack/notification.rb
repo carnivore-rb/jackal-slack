@@ -19,6 +19,9 @@ module Jackal
         end
       end
 
+      # Send messages to Slack
+      #
+      # @param message [Carnivore::Message]
       def execute(message)
         failure_wrap(message) do |payload|
           payload[:data][:slack][:messages].each do |slack_msg|
@@ -31,17 +34,22 @@ module Jackal
             }
 
             desc = slack_msg.fetch(:description, 'Result:')
-            post_to_slack(payload, desc, [msg_attachment])
+            post_to_slack(desc, [msg_attachment])
           end
           payload[:data][:slack].delete(:messages)
           job_completed(:slack_notification, payload, message)
         end
       end
 
-      # Isolate this method so it can be stubbed out in tests
-      def post_to_slack(payload, description, attachments)
+      # Post message to Slack
+      #
+      # @param description [String] slack output description
+      # @param attachments [Array<Hash>] slack output attachments
+      # @return [TrueClass]
+      def post_to_slack(description, attachments)
         notifier = ::Slack::Notifier.new(config[:webhook_url])
         notifier.ping(description, attachments: attachments)
+        true
       end
 
     end
