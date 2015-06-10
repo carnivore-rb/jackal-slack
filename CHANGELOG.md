@@ -1,3 +1,6 @@
+# v0.1.10
+* Remove messages from payload after delivery
+
 # v0.1.8
 * Add service registration
 
