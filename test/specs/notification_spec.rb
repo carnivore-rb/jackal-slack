@@ -2,10 +2,11 @@ require 'jackal-slack'
 require 'pry'
 
 class Jackal::Slack::Notification
+  attr_accessor :test_payload
   # stub out actual call to slack-notifier
-  def post_to_slack(payload, description, attachments)
-    payload.set(:attachment, attachments.first)
-    payload.set(:description, description)
+  def post_to_slack(description, attachments)
+    test_payload.set(:attachment, attachments.first)
+    test_payload.set(:description, description)
   end
 end
 
@@ -50,9 +51,11 @@ describe Jackal::Slack::Notification do
 
       result['description'].must_equal 'Result:'
 
-      attachment_expectations = { :text => 'testing',
-                                  :fallback => 'testing',
-                                  :mrkdwn_in => [:text, :fallback] }
+      attachment_expectations = {
+        :text => 'testing',
+        :fallback => 'testing',
+        :mrkdwn_in => [:text, :fallback]
+      }
       attachment_expectations.each { |k, v| result['attachment'][k].must_equal(v) }
     end
   end
