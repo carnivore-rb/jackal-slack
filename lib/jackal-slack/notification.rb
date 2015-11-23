@@ -37,7 +37,7 @@ module Jackal
             post_to_slack(desc, [msg_attachment])
           end
           payload[:data][:slack].delete(:messages)
-          job_completed(:slack_notification, payload, message)
+          job_completed(:slack, payload, message)
         end
       end
 
