@@ -1,3 +1,6 @@
+# v0.1.12
+* Fix job name set when complete
+
 # v0.1.10
 * Remove messages from payload after delivery
 
