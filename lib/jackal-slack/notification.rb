@@ -14,8 +14,7 @@ module Jackal
       # @return [Truthy, Falsey]
       def valid?(message)
         super do |payload|
-          config[:webhook_url] &&
-            payload.get(:data, :slack, :messages)
+          payload.get(:data, :slack, :messages)
         end
       end
 
@@ -24,19 +23,23 @@ module Jackal
       # @param message [Carnivore::Message]
       def execute(message)
         failure_wrap(message) do |payload|
-          payload[:data][:slack][:messages].each do |slack_msg|
-            msg = slack_msg[:message].to_s
-            msg_attachment = {
-              fallback: msg,
-              text: msg,
-              color: slack_msg[:color],
-              mrkdwn_in: slack_msg.fetch(:markdown, true) ? [:text, :fallback] : []
-            }
+          if(config[:webhook_url])
+            payload[:data][:slack][:messages].each do |slack_msg|
+              msg = slack_msg[:message].to_s
+              msg_attachment = {
+                fallback: msg,
+                text: msg,
+                color: slack_msg[:color],
+                mrkdwn_in: slack_msg.fetch(:markdown, true) ? [:text, :fallback] : []
+              }
 
-            desc = slack_msg.fetch(:description, 'Result:')
-            post_to_slack(desc, [msg_attachment])
+              desc = slack_msg.fetch(:description, 'Result:')
+              post_to_slack(desc, [msg_attachment])
+            end
+            payload[:data][:slack].delete(:messages)
+          else
+            warn 'Cannot send slack notifications. No web hook URL defined.'
           end
-          payload[:data][:slack].delete(:messages)
           job_completed(:slack, payload, message)
         end
       end
